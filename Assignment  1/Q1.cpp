@@ -1,32 +1,22 @@
 #include <iostream>
+#include <sstream>
 #include <string>
 using namespace std;
 
-class WordCount {
-public:
-    string s;
-    int c = 0;
-
-    void accept() {
-        cout << "Enter a string: ";
-        getline(cin, s);
-    }
-
-    void count() {
-        c = 0; 
-        for(int i = 0; i < s.length(); i++) {
-           
-            if (s[i] != ' ' && (i == 0 || s[i-1] == ' ')) {
-                c++;
-            }
-        }
-        cout << "Number of words in the string = " << c << endl;
-    }
-};
-
 int main() {
-    WordCount w;
-    w.accept();
-    w.count();
+    string s;
+    int count = 0;
+
+    cout << "Enter a string: ";
+    getline(cin, s);
+
+    stringstream ss(s);
+    string word;
+
+    while (ss >> word) {
+        count++;
+    }
+
+    cout << "Number of words: " << count;
     return 0;
 }

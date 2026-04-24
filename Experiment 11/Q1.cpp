@@ -3,49 +3,41 @@ using namespace std;
 
 struct Node {
     int data;
-    Node* left;
-    Node* right;
+    Node *left, *right;
+    Node(int x) : data(x), left(NULL), right(NULL) {}
 };
 
-int search(int inorder[], int start, int end, int val) {
-    for (int i = start; i <= end; i++) {
-        if (inorder[i] == val)
-            return i;
-    }
+int idx = 0;
+
+int find(int in[], int l, int r, int val) {
+    for (int i = l; i <= r; i++)
+        if (in[i] == val) return i;
     return -1;
 }
 
-Node* buildTree(int preorder[], int inorder[], int start, int end, int &index) {
-    if (start > end) return NULL;
+Node* build(int pre[], int in[], int l, int r) {
+    if (l > r) return NULL;
 
-    Node* node = new Node();
-    node->data = preorder[index++];
-    node->left = node->right = NULL;
+    Node* root = new Node(pre[idx++]);
+    int mid = find(in, l, r, root->data);
 
-    if (start == end) return node;
+    root->left = build(pre, in, l, mid - 1);
+    root->right = build(pre, in, mid + 1, r);
 
-    int pos = search(inorder, start, end, node->data);
-
-    node->left = buildTree(preorder, inorder, start, pos - 1, index);
-    node->right = buildTree(preorder, inorder, pos + 1, end, index);
-
-    return node;
+    return root;
 }
 
-void inorderPrint(Node* root) {
+void print(Node* root) {
     if (!root) return;
-    inorderPrint(root->left);
+    print(root->left);
     cout << root->data << " ";
-    inorderPrint(root->right);
+    print(root->right);
 }
 
 int main() {
-    int preorder[] = {1,2,4,5,3};
-    int inorder[] = {4,2,5,1,3};
-    int n = 5, index = 0;
+    int pre[] = {1,2,4,5,3};
+    int in[]  = {4,2,5,1,3};
 
-    Node* root = buildTree(preorder, inorder, 0, n-1, index);
-
-    cout << "Inorder: ";
-    inorderPrint(root);
+    Node* root = build(pre, in, 0, 4);
+    print(root);
 }
